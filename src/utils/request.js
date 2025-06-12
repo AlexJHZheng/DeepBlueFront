@@ -59,12 +59,12 @@ service.interceptors.response.use(
       // token过期或未登录，调用统一的登出方法
       const userStore = useUserStore()
       userStore.logout()
+      ElMessage.error('未授权，请重新登录')
       return Promise.reject(new Error(res.message || '未授权，请重新登录'))
     }
     
     // 其他错误
-    ElMessage.error(res.message || '请求失败')
-    return Promise.reject(new Error(res.message || '请求失败'))
+    return Promise.reject(res)
   },
   error => {
     console.error('响应错误：', error)
@@ -79,11 +79,11 @@ service.interceptors.response.use(
     if (error.response.status === 401) {
       const userStore = useUserStore()
       userStore.logout()
+      ElMessage.error('未授权，请重新登录')
       return Promise.reject(new Error('未授权，请重新登录'))
     }
 
     // 处理其他错误
-    ElMessage.error(error.response?.data?.message || '请求失败')
     return Promise.reject(error)
   }
 )

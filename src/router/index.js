@@ -39,6 +39,12 @@ const routes = [
             name: 'Role',
             component: () => import('@/views/admin/role/index.vue'),
             meta: { title: '角色管理', requiresAuth: true }
+          },
+          {
+            path: 'permission',
+            name: 'Permission',
+            component: () => import('@/views/admin/permission/index.vue'),
+            meta: { title: '权限管理', requiresAuth: true }
           }
         ]
       },
