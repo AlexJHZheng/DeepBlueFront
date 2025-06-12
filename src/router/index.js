@@ -23,6 +23,12 @@ const routes = [
         meta: { title: '首页', requiresAuth: true }
       },
       {
+        path: 'profile',
+        name: 'Profile',
+        component: () => import('@/views/profile/index.vue'),
+        meta: { title: '个人信息', requiresAuth: true }
+      },
+      {
         path: 'admin',
         name: 'Admin',
         component: () => import('@/views/admin/index.vue'),

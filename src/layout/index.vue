@@ -139,6 +139,8 @@ const handleCommand = (command) => {
     userStore.logout()
     ElMessage.success('已退出登录')
     router.push('/login')
+  } else if (command === 'profile') {
+    router.push('/profile')
   }
 }
 </script>

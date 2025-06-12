@@ -1,34 +1,36 @@
 <template>
   <div class="login-container">
     <div class="login-box">
-      <div class="login-header">
-        <img src="@/assets/logo.svg" class="logo" alt="logo">
-        <h2>AI平台</h2>
-      </div>
-      <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" class="login-form">
+      <h2 class="title">AI平台</h2>
+      <el-form
+        ref="loginFormRef"
+        :model="loginForm"
+        :rules="loginRules"
+        class="login-form"
+      >
         <el-form-item prop="username">
           <el-input
             v-model="loginForm.username"
-            placeholder="请输入用户名"
+            placeholder="用户名"
             :prefix-icon="User"
-            @keyup.enter="handleLogin"
           />
         </el-form-item>
-
         <el-form-item prop="password">
           <el-input
             v-model="loginForm.password"
-            placeholder="请输入密码"
-            :type="passwordVisible ? 'text' : 'password'"
+            type="password"
+            placeholder="密码"
             :prefix-icon="Lock"
-            :suffix-icon="passwordVisible ? View : Hide"
-            @click-suffix="passwordVisible = !passwordVisible"
             @keyup.enter="handleLogin"
           />
         </el-form-item>
-
         <el-form-item>
-          <el-button :loading="loading" type="primary" class="login-button" @click="handleLogin">
+          <el-button
+            :loading="loading"
+            type="primary"
+            class="login-button"
+            @click="handleLogin"
+          >
             登录
           </el-button>
         </el-form-item>
@@ -39,17 +41,13 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { User, Lock, View, Hide } from '@element-plus/icons-vue'
 import { useRouter, useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
-const loginFormRef = ref(null)
-const loading = ref(false)
-const passwordVisible = ref(false)
 
 const loginForm = reactive({
   username: '',
@@ -58,31 +56,38 @@ const loginForm = reactive({
 
 const loginRules = {
   username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 3, message: '用户名长度不能小于3个字符', trigger: 'blur' }
+    { required: true, message: '请输入用户名', trigger: 'blur' }
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, message: '密码长度不能小于6个字符', trigger: 'blur' }
+    { required: true, message: '请输入密码', trigger: 'blur' }
   ]
 }
 
+const loading = ref(false)
+const loginFormRef = ref(null)
+
 const handleLogin = async () => {
+  if (!loginFormRef.value) return
+
   try {
     await loginFormRef.value.validate()
     
-    await userStore.handleLogin(loginForm)
-    ElMessage.success('登录成功')
+    loading.value = true
+    await userStore.loginAction(loginForm)
     
-    // 获取重定向地址或默认跳转到首页
-    const redirectPath = route.query.redirect || '/'
-    router.push(redirectPath)
+    ElMessage({
+      message: '登录成功',
+      type: 'success'
+    })
+
+    // 如果有重定向地址，就跳转到重定向地址
+    const redirect = route.query.redirect || '/'
+    router.replace(redirect)
   } catch (error) {
-    if (error.response?.data?.message) {
-      ElMessage.error(error.response.data.message)
-    } else {
-      ElMessage.error('登录失败，请检查用户名和密码')
-    }
+    console.error('登录失败：', error)
+    ElMessage.error('登录失败：' + (error.message || '未知错误'))
+  } finally {
+    loading.value = false
   }
 }
 </script>
@@ -102,32 +107,16 @@ const handleLogin = async () => {
     border-radius: 8px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
-    .login-header {
+    .title {
       text-align: center;
-      margin-bottom: 40px;
-
-      .logo {
-        width: 84px;
-        height: 84px;
-        margin-bottom: 16px;
-      }
-
-      h2 {
-        margin: 0;
-        font-size: 24px;
-        color: #333;
-        font-weight: 500;
-      }
+      margin-bottom: 30px;
+      color: #303133;
+      font-size: 24px;
     }
 
     .login-form {
-      .el-input {
-        --el-input-height: 42px;
-      }
-
       .login-button {
         width: 100%;
-        height: 42px;
       }
     }
   }
