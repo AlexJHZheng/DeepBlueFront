@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { login, getUserInfo, logout as userLogout } from '@/api/user'
+import { login, getUserInfo } from '@/api/user'
+import { ElMessage } from 'element-plus'
+import router from '@/router'
 
 export const useUserStore = defineStore('user', () => {
   const token = ref(localStorage.getItem('token') || '')
@@ -32,17 +34,17 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // 退出登录
-  async function logout() {
-    try {
-      await userLogout()
-    } catch (error) {
-      console.error('退出登录失败：', error)
-    } finally {
-      // 无论是否成功都清除本地状态
-      token.value = ''
-      userInfo.value = null
-      localStorage.removeItem('token')
-    }
+  function logout() {
+    // 清除本地状态
+    token.value = ''
+    userInfo.value = null
+    localStorage.removeItem('token')
+    
+    // 提示用户
+    ElMessage.success('已退出登录')
+    
+    // 跳转到登录页
+    router.replace('/login')
   }
 
   return {

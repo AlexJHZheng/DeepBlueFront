@@ -4,7 +4,7 @@
     <div class="sidebar-container" :class="{ 'is-collapse': isCollapse }">
       <div class="logo-container">
         <img src="@/assets/logo.svg" class="logo" alt="logo">
-        <h1 class="logo-title" v-show="!isCollapse">AI平台</h1>
+        <h1 class="logo-title" v-show="!isCollapse">深蓝AI平台</h1>
       </div>
       <el-scrollbar>
         <el-menu
@@ -137,8 +137,6 @@ const toggleSidebar = () => {
 const handleCommand = (command) => {
   if (command === 'logout') {
     userStore.logout()
-    ElMessage.success('已退出登录')
-    router.push('/login')
   } else if (command === 'profile') {
     router.push('/profile')
   }

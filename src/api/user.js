@@ -38,13 +38,13 @@ service.interceptors.response.use(
 )
 
 /**
- * 用户登录
+ * 用户登录11
  * @param {Object} data 登录信息
  * @returns Promise
  */
 export function login(data) {
   return request({
-    url: '/api/user/login',
+    url: '/user/login',
     method: 'post',
     data
   })
@@ -56,7 +56,7 @@ export function login(data) {
  */
 export function getUserInfo() {
   return request({
-    url: '/api/user/info',
+    url: '/user/info',
     method: 'get'
   })
 }
@@ -68,26 +68,12 @@ export function getUserInfo() {
  */
 export function updatePassword(data) {
   return request({
-    url: '/api/user/password',
+    url: '/user/password',
     method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     data: {
       userId: data.userId,
       newPassword: data.newPassword
     }
-  })
-}
-
-/**
- * 退出登录
- * @returns Promise
- */
-export function logout() {
-  return request({
-    url: '/api/user/logout',
-    method: 'post'
   })
 }
 
